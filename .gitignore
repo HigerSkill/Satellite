@@ -1,2 +1,5 @@
 .idea
 cmake-build-debug
+.rinex
+.sp3
+.out_files
