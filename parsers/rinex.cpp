@@ -16,7 +16,7 @@
 using namespace std;
 using namespace gpstk;
 
-int obs_parser(const string& filename, const string& filename_out, const string& obs_code, int prn) {
+int obs_parser_file(const string& filename, const string& filename_out, const string& obs_code, int prn) {
     /* Parse Rinex observation file and write time and data by code in files.
      *
      * Arguments:
@@ -51,7 +51,7 @@ int obs_parser(const string& filename, const string& filename_out, const string&
 
         while (obs_file >> data) {
             CivilTime civtime(data.time);
-            cout << civtime << endl;
+            cout << int(civtime.convertToCommonTime().getSecondOfDay()) << endl;
 
             RinexSatID prn_sat(prn, SatID::systemGlonass);
             Rinex3ObsData::DataMap::iterator pointer = data.obs.find(prn_sat);
@@ -91,6 +91,74 @@ int obs_parser(const string& filename, const string& filename_out, const string&
     catch (...) {
         cout << "Unknown error" << endl;
         return 0;
+//        exit(1);
+    }
+}
+
+map<int, long double> obs_parser(const string& filename, const string& obs_code, int prn) {
+    /* Return time and data by code from Rinex observation file.
+     *
+     * Arguments:
+     *  filename (string): Name of rinex observation file.
+     *  obs_code (string): Observation code (C1C - pseudorange, L1C - Carrier Phase and etc., see docs rinex format).
+     *  prn (int): The PRN of the satellite.
+     * */
+    map<int, long double> timed_obs = {};
+
+    try {
+        cout << "Reading " << filename << endl;
+
+        Rinex3ObsStream obs_file(filename);
+        obs_file.exceptions(ios::failbit);
+
+        Rinex3ObsHeader header;
+        Rinex3ObsData data;
+        RinexDatum data_object;
+
+        obs_file >> header;
+        header.dump(cout);
+
+        Rinex3ObsStream antenna_out("antenna_position", ios::out | ios::app);
+        antenna_out << header.markerName << endl;
+        antenna_out << std::setprecision(13) << header.antennaPosition << endl;
+
+        while (obs_file >> data) {
+            CivilTime civtime(data.time);
+//            cout << int(civtime.convertToCommonTime().getSecondOfDay()) << endl;
+
+            RinexSatID prn_sat(prn, SatID::systemGlonass);
+            Rinex3ObsData::DataMap::iterator pointer = data.obs.find(prn_sat);
+
+            if (pointer == data.obs.end()) {
+                int a = 0;
+//                cout << "PRN " << prn_sat << " not in view." << endl;
+            } else {
+                int time_in_sec = int(civtime.convertToCommonTime().getSecondOfDay());
+                data_object = data.getObs(prn_sat, obs_code, header);
+
+                long double obs_data = data_object.data;
+
+                timed_obs[time_in_sec] = obs_data;
+            }
+        }
+
+        cout << "Read " << obs_file.recordNumber << " epochs." << endl;
+
+        return timed_obs;
+    }
+    catch(FFStreamError& error) {
+        cout << error;
+        return timed_obs;
+//        exit(1);
+    }
+    catch(Exception& error) {
+        cout << error;
+        return timed_obs;
+//        exit(1);
+    }
+    catch (...) {
+        cout << "Unknown error" << endl;
+        return timed_obs;
 //        exit(1);
     }
 }
