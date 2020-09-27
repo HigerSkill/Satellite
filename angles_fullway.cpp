@@ -31,6 +31,8 @@ int get_angles_and_coords(
     // Save coords from SP3 to file
     ofstream coords_file;
     ofstream time_coords_file;
+    coords_file.open(
+            antenna_name + "_coords", ios::out|ios::trunc);
     time_coords_file.open(
             antenna_name + "_time_coords", ios::out|ios::trunc);
 

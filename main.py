@@ -88,22 +88,22 @@ if __name__ == '__main__':
 
 
 
-    # angles = read_obs_measurements('/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_angles')
-    # print(angles)
-    #
-    # times = []
-    # with open('/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_time') as f:
-    #     for line in f.readlines():
-    #         x = line.split('\n')[0]
-    #         times.append(int(x))
-    #
-    #
-    # plot_obs_measurement(times, angles, f'iisc_angles.png')
+    angles = read_obs_measurements('/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_angles')
+    print(angles)
 
-    x, y, z = read_coords(
-        '/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_coords'
-    )
-    time = read_time_sec(
-        '/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_time'
-    )
-    plot_3d_measurements(x, y, z, 'iisc')
+    times = []
+    with open('/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_time') as f:
+        for line in f.readlines():
+            x = line.split('\n')[0]
+            times.append(int(x))
+
+
+    plot_obs_measurement(times, angles, f'iisc_angles.png')
+
+    # x, y, z = read_coords(
+    #     '/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_coords'
+    # )
+    # time = read_time_sec(
+    #     '/Users/aleksandrdimov/Documents/masdeg/Satellite/cmake-build-debug/IISC_time'
+    # )
+    # plot_3d_measurements(x, y, z, 'iisc')

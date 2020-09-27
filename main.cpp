@@ -143,7 +143,5 @@ int main() {
             "/Users/aleksandrdimov/Documents/masdeg/Satellite/.sp3/150/igs21075.sp3",
             18);
 
-
-
     return 0;
 }

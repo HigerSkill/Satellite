@@ -25,30 +25,34 @@ double satellite_station_angle(
         const Position& satellite, const Position& station) {
     /* Return angle between satellite and station. */
 
+//    ofstream station_file;
+//    ofstream satellite_file;
+//    station_file.open("station_normal", ios::out|ios::trunc);
+//    satellite_file.open("satellite_vector", ios::out|ios::trunc);
+
     // Get n-vector for station coordinates
     Position station_normal = v_normal(station.getGeodeticLatitude(), station.getLongitude());
+//    cout << station.getGeodeticLatitude() << endl;
+//    cout << station.getLongitude() << endl;
 
     // Get vector for satellite
-    Position satellite_vector;
-    satellite_vector.setECEF(
-            satellite.getX() - station.getX(),
-            satellite.getY() - station.getY(),
-            satellite.getZ() - station.getZ());
+    vector<double> satellite_vector = {
+        satellite.getX() - station.getX(),
+        satellite.getY() - station.getY(),
+        satellite.getZ() - station.getZ()
+    };
 
     double numerator_angle =
-            satellite.getX() * station_normal.getX() +
-            satellite.getY() * station_normal.getY() +
-            satellite.getZ() * station_normal.getZ();
+            satellite_vector[0] * station_normal.getX() +
+            satellite_vector[1] * station_normal.getY() +
+            satellite_vector[2] * station_normal.getZ();
 
     double denominator_angle =
             sqrt(
-                    pow(satellite_vector.getX(), 2) +
-                    pow(satellite_vector.getY(), 2) +
-                    pow(satellite_vector.getZ(), 2)) *
-            sqrt(
-                    pow(station_normal.getX(), 2) +
-                    pow(station_normal.getY(), 2) +
-                    pow(station_normal.getZ(), 2));
+                pow(satellite_vector[0], 2) +
+                pow(satellite_vector[1], 2) +
+                pow(satellite_vector[2], 2)
+            );
 
     double angle = acos(numerator_angle / denominator_angle) * 180 / PI;
 
