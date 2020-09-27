@@ -1,6 +1,6 @@
 #include <iostream>
-#include "math.h"
-#include "string"
+#include <math.h>
+#include <string>
 
 #include "Position.hpp"
 
@@ -21,14 +21,16 @@ Position v_normal(double latitude, double longitude) {
     return normal;
 }
 
-double satellite_station_angle(Position satellite, Position station) {
+double satellite_station_angle(
+        const Position& satellite, const Position& station) {
     /* Return angle between satellite and station. */
 
     // Get n-vector for station coordinates
     Position station_normal = v_normal(station.getGeodeticLatitude(), station.getLongitude());
 
     // Get vector for satellite
-    satellite.setECEF(
+    Position satellite_vector;
+    satellite_vector.setECEF(
             satellite.getX() - station.getX(),
             satellite.getY() - station.getY(),
             satellite.getZ() - station.getZ());
@@ -39,8 +41,14 @@ double satellite_station_angle(Position satellite, Position station) {
             satellite.getZ() * station_normal.getZ();
 
     double denominator_angle =
-            sqrt(pow(satellite.getX(), 2) + pow(satellite.getY(), 2) + pow(satellite.getZ(), 2)) *
-            sqrt(pow(station_normal.getX(), 2) + pow(station_normal.getY(), 2) + pow(station_normal.getZ(), 2));
+            sqrt(
+                    pow(satellite_vector.getX(), 2) +
+                    pow(satellite_vector.getY(), 2) +
+                    pow(satellite_vector.getZ(), 2)) *
+            sqrt(
+                    pow(station_normal.getX(), 2) +
+                    pow(station_normal.getY(), 2) +
+                    pow(station_normal.getZ(), 2));
 
     double angle = acos(numerator_angle / denominator_angle) * 180 / PI;
 

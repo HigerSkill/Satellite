@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <tuple>
 #include <vector>
 
 #include "Rinex3NavStream.hpp"
@@ -53,7 +54,7 @@ int obs_parser_file(const string& filename, const string& filename_out, const st
             CivilTime civtime(data.time);
             cout << int(civtime.convertToCommonTime().getSecondOfDay()) << endl;
 
-            RinexSatID prn_sat(prn, SatID::systemGlonass);
+            RinexSatID prn_sat(prn, SatID::systemGPS);
             Rinex3ObsData::DataMap::iterator pointer = data.obs.find(prn_sat);
 
             if (pointer == data.obs.end()) {
@@ -126,7 +127,7 @@ map<int, long double> obs_parser(const string& filename, const string& obs_code,
             CivilTime civtime(data.time);
 //            cout << int(civtime.convertToCommonTime().getSecondOfDay()) << endl;
 
-            RinexSatID prn_sat(prn, SatID::systemGlonass);
+            RinexSatID prn_sat(prn, SatID::systemGPS);
             Rinex3ObsData::DataMap::iterator pointer = data.obs.find(prn_sat);
 
             if (pointer == data.obs.end()) {
@@ -202,4 +203,67 @@ int nav_parser(const char *filename, const char *filename_out, int prn) {
     return 0;
 }
 
+std::tuple<string, vector<double>>get_antenna_position(
+        const string& rinex_file) {
+    /* Return antenna position from a rinex file. */
+    Rinex3ObsStream obs_file(rinex_file);
+    obs_file.exceptions(ios::failbit);
 
+    Rinex3ObsHeader header;
+
+    obs_file >> header;
+
+    // Return antenna position in vector type.
+    vector<double> antenna_position = {
+            header.antennaPosition[0],
+            header.antennaPosition[1],
+            header.antennaPosition[2]
+    };
+    return make_tuple(header.markerName, antenna_position);
+}
+
+vector<int> get_time_obs(const string& rinex_file, int prn) {
+    /* Return vector time when antenna receive signal from satellite */
+    try {
+        vector<int> time;
+
+        Rinex3ObsStream obs_file(rinex_file);
+        obs_file.exceptions(ios::failbit);
+
+        Rinex3ObsHeader header;
+        Rinex3ObsData data;
+        RinexDatum data_object;
+
+        obs_file >> header;
+
+        while (obs_file >> data) {
+            CivilTime civtime(data.time);
+
+            RinexSatID prn_sat(prn, SatID::systemGPS);
+            auto pointer = data.obs.find(prn_sat);
+
+            if (pointer == data.obs.end()) {
+                cout << "PRN " << prn_sat << " not in view." << endl;
+            } else {
+                time.push_back(
+                        int(civtime.convertToCommonTime().getSecondOfDay()));
+            }
+        }
+
+        obs_file.close();
+
+        return time;
+    }
+    catch(FFStreamError& error) {
+        cout << error;
+        exit(1);
+    }
+    catch(Exception& error) {
+        cout << error;
+        exit(1);
+    }
+    catch (...) {
+        cout << "Unknown error" << endl;
+        exit(1);
+    }
+}
