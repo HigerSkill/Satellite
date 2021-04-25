@@ -14,6 +14,7 @@ CycleSlipDetection::CycleSlipDetection(RinexObs &firstStation, RinexObs &secondS
 }
 
 
+
 vector<int> CycleSlipDetection::findObviousSlips(const std::string &obsCode) {
     vector<double> single_diffs;
     vector<int> timestamps;
@@ -49,27 +50,19 @@ std::vector<int> CycleSlipDetection::findMovingAverageSlips(const string &obsCod
 
     vector<int> slips;
 
-    MovingAverage foo(7);
+    MovingAverage ma(7);
 
     for (auto const& pm : phase_measures) {
         double time = pm.first;
         double measure = pm.second;
 
-        foo.add(measure);
+        ma.add(measure);
 
         setprecision(13);
-        if (measure > 1.5*foo.avg()) {
+        if (measure > 1.5*ma.avg()) {
             slips.push_back(time);
         }
-
     }
 
     return slips;
-}
-
-std::vector<int> CycleSlipDetection::findMASlips(const string &obsCode) {
-    map<int, long double> phase_measures = this->firstStation.getObservation(obsCode);
-    vector<int> slips;
-
-
 }

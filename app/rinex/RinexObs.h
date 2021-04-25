@@ -12,6 +12,9 @@
  * Provides the ability to receive information stored for the specified (by PRN code) satellite.
  */
 class RinexObs {
+private:
+    void resetFile();
+
 public:
     char *filename;
     int PRNCode;
@@ -28,6 +31,7 @@ public:
     RinexObs(char* filename, int PRNCode);
 
     RinexObs(const RinexObs& rinexObs);
+
 
     /**
      * Destructor RinexParser object.

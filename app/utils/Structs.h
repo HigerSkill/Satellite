@@ -1,5 +1,5 @@
-#ifndef SATELLITE_UTILS_H
-#define SATELLITE_UTILS_H
+#ifndef SATELLITE_STRUCTS_H
+#define SATELLITE_STRUCTS_H
 
 #include <CommonTime.hpp>
 #include <ReferenceFrame.hpp>
@@ -47,9 +47,17 @@ struct ConfigRun {
     char * fileOutSlipsProjections;
 };
 
+struct Plane {
+    double A;
+    double B;
+    double C;
+    double D;
+};
+
+
 struct Data {
     int t;
     double x;
 };
 
-#endif //SATELLITE_UTILS_H
+#endif //SATELLITE_STRUCTS_H

@@ -25,6 +25,10 @@ void SP3::getCoordinates(char *filenameOut) {
     SP3Data data;
     SP3SatID satId(this->PRNCode, SatelliteSystem::GPS);
 
+    file.clear();
+    file.seekg(0);
+    file >> header;
+
     while (file >> data) {
         // Find data for selected Satellite ID
         if (data.sat == satId) {
@@ -45,6 +49,10 @@ std::map<int, std::vector<double>> SP3::getCoordinates() {
     SP3SatID satId(this->PRNCode, SatelliteSystem::GPS);
 
     map<int, vector<double>> coordinatesTime;
+
+    file.clear();
+    file.seekg(0);
+    file >> header;
 
     while (file >> data) {
         if (data.sat == satId) {
@@ -151,9 +159,9 @@ gpstk::Triple SP3::getInterpolatedPosition(int secs) {
         a++;
     }
 
-    x = interpolate(t, xt, secs, n);
-    y = interpolate(t, yt, secs, n);
-    z = interpolate(t, zt, secs, n);
+    x = interpolate(t, xt, secs, this->interpolateOrder);
+    y = interpolate(t, yt, secs, this->interpolateOrder);
+    z = interpolate(t, zt, secs, this->interpolateOrder);
 
     Triple k(x, y, z);
 

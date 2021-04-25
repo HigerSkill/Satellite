@@ -7,7 +7,7 @@
 #include <SP3Stream.hpp>
 
 
-#include "./utils.h"
+#include "../utils/Structs.h"
 
 
 class SP3 {

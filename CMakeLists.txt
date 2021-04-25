@@ -15,6 +15,16 @@ add_executable(
     app/rinex/CycleSlipDetection.h
     app/rinex/MovingAverage.cpp
     app/rinex/MovingAverage.h
-        app/sp3/SP3.cpp app/sp3/SP3.h app/sp3/utils.h app/utils/Lagrange.h)
+    app/sp3/SP3.cpp
+    app/sp3/SP3.h
+    app/utils/Structs.h
+    app/utils/Lagrange.h
+    app/sp3/Projection.cpp
+    app/sp3/Projection.h
+    app/constants.h
+    app/utils/Vectors.h
+    app/utils/Angles.h
+    runs/find_slips.cpp
+    app/utils/Slips.h)
 
 target_link_libraries(Satellite gpstk)

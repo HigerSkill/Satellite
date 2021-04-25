@@ -27,6 +27,7 @@ RinexObs::RinexObs(const RinexObs &rinexObs) {
     this->PRNCode = rinexObs.PRNCode;
 }
 
+
 RinexObs::~RinexObs() {
     this->obsFile.close();
 }
