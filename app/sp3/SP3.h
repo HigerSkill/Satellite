@@ -16,6 +16,8 @@ public:
     int PRNCode;
     int interpolateOrder = 10;
 
+    gpstk::SatelliteSystem system;
+
     gpstk::SP3Stream file;
     gpstk::SP3Header header;
 
@@ -26,7 +28,7 @@ public:
      * @param PRNCode PRN code of satellite.
      * @param interpolateOrder Order of the Lagrange Polinom.
     */
-    SP3(char *filename, int PRNCode, int interpolateOrder);
+    SP3(char *filename, int PRNCode, int interpolateOrder=10, gpstk::SatelliteSystem system=gpstk::SatelliteSystem::GPS);
 
 /**
      * Parse SP3 file and write time and coordinates in files.

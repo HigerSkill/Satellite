@@ -3,6 +3,7 @@
 ## Architecture of project:
 #### `app` directory contain C++ application
 #### `scripts` directory contain Python applications
+#### `runs` directory contain C++ files which allow run some apps
 
 ## Set up project
 

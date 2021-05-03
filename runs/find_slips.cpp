@@ -19,10 +19,10 @@ using namespace std;
 using namespace gpstk;
 
 int main() {
-    string sp3Name = "igs";
+    string sp3Name = "igl";
     string sp3Ext = ".sp3";
 
-    string rinexName = "ptbb"; // Set up your antenna name
+    string rinexName = "badg"; // Set up your antenna name
     string rinexExt = ".20o"; // Year
 
     int week = 2086; // GPS Week and day can be calculated on http://navigationservices.agi.com/GNSSWeb/
@@ -52,17 +52,35 @@ int main() {
         day = day % 7;
 
         // Station configuration
-        ConfigRun config{0, "L1C", 52.296, 10.460, 3844060.11,  709661.2, 5023129.46};
+//        ConfigRun config{
+//                0,
+//                "L1C",
+//                56.021,
+//                37.215,
+//                2845456.3,
+//                2160954.37,
+//                5265993.4
+//        }; // MDVJ
+//
+        ConfigRun config{
+                0,
+                "L1C",
+                51.770,
+                102.235,
+                -838281.513,
+                3865777.334,
+                4987624.632
+        }; // BADG
 
-        string sp3Path = "/home/alex/Downloads/sp3/" + sp3File; // Path to SP3 files
+        string sp3Path = "/home/alex/Downloads/sp3_glonass/" + sp3File; // Path to SP3 files
         char * sp3PathCh = new char [sp3Path.length()+1];
         strcpy(sp3PathCh, sp3Path.c_str());
 
-        string rinexPath = "/home/alex/Downloads/ptbb_2020/" + rinexFile; // Path to Rinex files
+        string rinexPath = "/home/alex/Downloads/2020_BADG/" + rinexFile; // Path to Rinex files
         char * rinexPathCh = new char [rinexPath.length()+1];
         strcpy(rinexPathCh, rinexPath.c_str());
 
-        string outFile = "../output/20/" + rinexDay + ".txt";
+        string outFile = "../output/20_BADG/" + rinexDay + ".txt";
         char * outPathCh = new char [outFile.length()+1];
         strcpy(outPathCh, outFile.c_str());
 
@@ -70,11 +88,11 @@ int main() {
         config.rinex_file_first = rinexPathCh;
         config.fileOutSlipsProjections = outPathCh;
 
-        for (int prn = 1; prn <= 32; prn++) {
+        for (int prn = 1; prn <= 26; prn++) {
             cout << prn << endl;
 
             config.PRNCode = prn;
-            RinexObs rinex(config.rinex_file_first, config.PRNCode);
+            RinexObs rinex(config.rinex_file_first, config.PRNCode, SatelliteSystem::Glonass);
 
             getSlipsMAProjections(rinex, config);
         }

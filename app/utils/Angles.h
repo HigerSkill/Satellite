@@ -35,7 +35,7 @@ double getSatelliteStationAngle(const Position& satellite, const Position& stati
             + pow(satelliteVector[1], 2)
             + pow(satelliteVector[2], 2));
 
-    double angle = numeratorAngle / denominatorAngle;
+    double angle = acos(numeratorAngle / denominatorAngle);
 
     return angle;
 }

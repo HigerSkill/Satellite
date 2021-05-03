@@ -23,7 +23,7 @@ void getSlipsMAProjections(RinexObs &rinex, ConfigRun config) {
     CycleSlipDetection slips(rinex, rinex);
     vector<int> slipsTime = slips.findMovingAverageSlips(config.obsCode);
 
-    SP3 sp3(config.sp3_file, config.PRNCode, 10);
+    SP3 sp3(config.sp3_file, config.PRNCode, 10, SatelliteSystem::Glonass);
 
     ofstream slipsOut(config.fileOutSlipsProjections, ios::app | ios::out);
 

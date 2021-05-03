@@ -6,7 +6,7 @@
 using namespace gpstk;
 using namespace std;
 
-RinexObs::RinexObs(char *filename, int PRNCode) {
+RinexObs::RinexObs(char *filename, int PRNCode, SatelliteSystem system) {
     string extension = getFileExtension(filename);
 
     if(extension.find('o') < 1) {
@@ -15,6 +15,7 @@ RinexObs::RinexObs(char *filename, int PRNCode) {
 
     this->filename = filename;
     this->PRNCode = PRNCode;
+    this->system = system;
 
     this->obsFile.open(this->filename, ios::in);
     obsFile.exceptions(ios::failbit);
@@ -38,7 +39,7 @@ bool RinexObs::PRNCodeExists(const std::string& obsCode) {
         Rinex3ObsData data;
 
         while (obsFile >> data) {
-            RinexSatID satId(PRNCode, SatelliteSystem::GPS);
+            RinexSatID satId(PRNCode, system);
 
             if (data.obs.find(satId) == data.obs.end())
                 return false;
@@ -85,7 +86,7 @@ vector<int> RinexObs::getTimeObs() {
 
         while (obsFile >> data) {
             CivilTime obsTime(data.time);
-            RinexSatID satId(PRNCode, SatelliteSystem::GPS);
+            RinexSatID satId(PRNCode, system);
 
             auto pointer = data.obs.find(satId);
 
@@ -124,7 +125,7 @@ map<int, long double> RinexObs::getObservation(const string &obsCode) {
         while (obsFile >> data) {
             CivilTime civilTime(data.time);
 
-            RinexSatID satId(PRNCode, SatelliteSystem::GPS);
+            RinexSatID satId(PRNCode, system);
             auto pointer = data.obs.find(satId);
 
             if (pointer == data.obs.end()) {
@@ -165,7 +166,7 @@ void RinexObs::getObservation(const string &filenameOut, const string &obsCode) 
         while (obsFile >> data) {
             CivilTime civilTime(data.time);
 
-            RinexSatID satId(this->PRNCode, SatelliteSystem::GPS);
+            RinexSatID satId(this->PRNCode, system);
             Rinex3ObsData::DataMap::iterator pointer = data.obs.find(satId);
 
             if (pointer == data.obs.end()) {

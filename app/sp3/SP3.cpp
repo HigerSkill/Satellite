@@ -8,10 +8,11 @@
 using namespace std;
 using namespace gpstk;
 
-SP3::SP3(char *filename, int PRNCode, int interpolateOrder) {
+SP3::SP3(char *filename, int PRNCode, int interpolateOrder, gpstk::SatelliteSystem system) {
     this->filename = filename;
     this->PRNCode = PRNCode;
     this->interpolateOrder = interpolateOrder;
+    this->system = system;
 
     file.open(this->filename, ios::in);
 
@@ -23,7 +24,7 @@ void SP3::getCoordinates(char *filenameOut) {
     SP3Stream rout(filenameOut, ios::out|ios::trunc);
 
     SP3Data data;
-    SP3SatID satId(this->PRNCode, SatelliteSystem::GPS);
+    SP3SatID satId(this->PRNCode, this->system);
 
     file.clear();
     file.seekg(0);
@@ -46,7 +47,7 @@ void SP3::getCoordinates(char *filenameOut) {
 
 std::map<int, std::vector<double>> SP3::getCoordinates() {
     SP3Data data;
-    SP3SatID satId(this->PRNCode, SatelliteSystem::GPS);
+    SP3SatID satId(this->PRNCode, this->system);
 
     map<int, vector<double>> coordinatesTime;
 
@@ -94,7 +95,7 @@ void SP3::convertFrameCoordinates(transformElements tfElem, char *filenameOut) {
     coordinatesFile.close();
 }
 
-gpstk::Triple SP3::getInterpolatedPosition(int secs) {
+Triple SP3::getInterpolatedPosition(int secs) {
     map<int, vector<double>> coordinatesTime = this->getCoordinates();
     int n = interpolateOrder;
 

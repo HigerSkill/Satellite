@@ -19,6 +19,7 @@ public:
     char *filename;
     int PRNCode;
 
+    gpstk::SatelliteSystem system;
     gpstk::Rinex3ObsHeader header;
     gpstk::Rinex3ObsStream obsFile;
 
@@ -28,7 +29,7 @@ public:
      * @param filename Path to RinexObs the file.
      * @param PRNCode PRN code of the satellite.
      */
-    RinexObs(char* filename, int PRNCode);
+    RinexObs(char* filename, int PRNCode, gpstk::SatelliteSystem system=gpstk::SatelliteSystem::GPS);
 
     RinexObs(const RinexObs& rinexObs);
 
