@@ -65,6 +65,8 @@ double vectorScalar(gpstk::Position a, gpstk::Position b) {
  */
 gpstk::Position getVector(gpstk::Position a, gpstk::Position b) {
     return gpstk::Position(b.X() - a.X(), b.Y() - a.Y(), b.Z() - a.Z());
+    b.getGeocentricLatitude()
+    b.getGeodeticLatitude()
 }
 
 /**

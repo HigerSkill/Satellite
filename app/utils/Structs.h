@@ -38,13 +38,18 @@ struct ConfigRun {
 
     Station station;
 
+    // Rinex
     char * rinex_file_first;
     char * rinex_file_second;
 
+    // SP3
     char * sp3_file;
 
     char * fileOutProjections;
     char * fileOutSlipsProjections;
+
+    int interpolateOrder=10;
+    gpstk::SatelliteSystem system=gpstk::SatelliteSystem::GPS;
 };
 
 struct Plane {

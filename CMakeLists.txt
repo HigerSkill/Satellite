@@ -24,10 +24,11 @@ add_executable(
     app/constants.h
     app/utils/Vectors.h
     app/utils/Angles.h
-#    runs/find_slips.cpp
+    runs/find_slips.cpp
     app/utils/Slips.h
 #    runs/sp3_projections.cpp
-    runs/sp3_projections_period.cpp
+#    runs/sp3_projections_period.cpp
+#    runs/sp3_read.cpp
 )
 
 target_link_libraries(Satellite gpstk)

@@ -50,7 +50,7 @@ std::vector<int> CycleSlipDetection::findMovingAverageSlips(const string &obsCod
 
     vector<int> slips;
 
-    MovingAverage ma(7);
+    MovingAverage ma(5);
 
     for (auto const& pm : phase_measures) {
         double time = pm.first;

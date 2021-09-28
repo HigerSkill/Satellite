@@ -64,14 +64,11 @@ int main() {
 //        }; // URAL
 
         ConfigRun config{
-                27,
+                10,
                 "L1C",
-                56.021,
-                37.215,
-                2845456.3,
-                2160954.37,
-                5265993.4
-        }; // MDVJ
+                14.535, 121.041
+                3664939.7992, 1409154.0345, 5009571.3524
+        }; // JOZE
 
 
 //        ConfigRun config{
@@ -84,7 +81,7 @@ int main() {
 //                4987624.632
 //        }; // BADG
 
-        string sp3Path = "/home/alex/Downloads/sp3_glonass/" + sp3File; // Path to SP3 files
+        string sp3Path = "/Users/aleksandrdimov/Documents/master/satellite/output/sp3/2020" + sp3File; // Path to SP3 files
         char *sp3PathCh = new char[sp3Path.length() + 1];
         strcpy(sp3PathCh, sp3Path.c_str());
 
@@ -93,7 +90,7 @@ int main() {
         SP3 sp3(sp3PathCh, config.PRNCode, 10, SatelliteSystem::Glonass);
         Projection projections(sp3, config.station);
 
-        string filename =  "../output/mdvj/projection_";
+        string filename =  "../output/joze/projection_";
         filename = filename + to_string(config.PRNCode) + ".txt";
 
         char file_out[filename.length() + 1];

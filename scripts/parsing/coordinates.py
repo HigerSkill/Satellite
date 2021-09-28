@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 def parse_coordinates_file(filepath: str) -> Tuple[list]:
     """Read file with coordinates X,Y,Z."""
-    x, y, z = [], [], []
+    t, x, y, z = [], [], [], []
 
     with open(filepath) as f:
         for line in f.readlines():
@@ -12,11 +12,12 @@ def parse_coordinates_file(filepath: str) -> Tuple[list]:
 
             line = line.split(',')
 
-            x.append(float(line[0]))
-            y.append(float(line[1]))
-            z.append(float(line[2]))
+            t.append(float(line[0]))
+            x.append(float(line[1]))
+            y.append(float(line[2]))
+            z.append(float(line[3]))
 
-    return x, y, z
+    return t, x, y, z
 
 
 def parse_projections(filepath: str) -> Tuple[List, List, List]:
@@ -35,3 +36,4 @@ def parse_projections(filepath: str) -> Tuple[List, List, List]:
             theta.append(float(line[2]))
 
     return times, r, theta
+

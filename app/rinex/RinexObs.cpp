@@ -17,26 +17,25 @@ RinexObs::RinexObs(char *filename, int PRNCode, SatelliteSystem system) {
     this->PRNCode = PRNCode;
     this->system = system;
 
-    this->obsFile.open(this->filename, ios::in);
-    obsFile.exceptions(ios::failbit);
-
-    obsFile >> this->header;
 }
 
 RinexObs::RinexObs(const RinexObs &rinexObs) {
     this->filename = rinexObs.filename;
     this->PRNCode = rinexObs.PRNCode;
-}
-
-
-RinexObs::~RinexObs() {
-    this->obsFile.close();
+    this->system = rinexObs.system;
 }
 
 
 bool RinexObs::PRNCodeExists(const std::string& obsCode) {
     try {
         Rinex3ObsData data;
+
+        Rinex3ObsHeader header;
+        Rinex3ObsStream obsFile;
+
+        obsFile.open(filename, ios::in);
+        obsFile.exceptions(ios::failbit);
+        obsFile >> header;
 
         while (obsFile >> data) {
             RinexSatID satId(PRNCode, system);
@@ -62,12 +61,26 @@ bool RinexObs::PRNCodeExists(const std::string& obsCode) {
 }
 
 string RinexObs::getAntennaName() {
+    Rinex3ObsHeader header;
+    Rinex3ObsStream obsFile;
+
+    obsFile.open(filename, ios::in);
+    obsFile.exceptions(ios::failbit);
+    obsFile >> header;
+
     return header.markerName;
 }
 
 
 tuple<string, vector<double>> RinexObs::getAntennaPosition() {
     // Save antenna position from header in vector.
+    Rinex3ObsHeader header;
+    Rinex3ObsStream obsFile;
+
+    obsFile.open(filename, ios::in);
+    obsFile.exceptions(ios::failbit);
+    obsFile >> header;
+
     vector<double> antennaPosition = {
             header.antennaPosition[0],
             header.antennaPosition[1],
@@ -83,6 +96,13 @@ vector<int> RinexObs::getTimeObs() {
         Rinex3ObsData data;
 
         vector<int> time;
+
+        Rinex3ObsHeader header;
+        Rinex3ObsStream obsFile;
+
+        obsFile.open(this->filename, ios::in);
+        obsFile.exceptions(ios::failbit);
+        obsFile >> header;
 
         while (obsFile >> data) {
             CivilTime obsTime(data.time);
@@ -116,11 +136,18 @@ vector<int> RinexObs::getTimeObs() {
 map<int, long double> RinexObs::getObservation(const string &obsCode) {
     map<int, long double> timedObs = {};
 
+    Rinex3ObsHeader header;
+    Rinex3ObsStream obsFile;
+
+    obsFile.open(filename, ios::in);
+    obsFile.exceptions(ios::failbit);
+    obsFile >> header;
+
     try {
         Rinex3ObsData data;
         RinexDatum datum;
 
-        cout << "Reading " << this->filename << endl;
+        cout << "Reading " << filename << endl;
 
         while (obsFile >> data) {
             CivilTime civilTime(data.time);
@@ -138,6 +165,7 @@ map<int, long double> RinexObs::getObservation(const string &obsCode) {
             }
         }
 
+        obsFile.close();
         return timedObs;
     }
     catch(FFStreamError& error) {
@@ -159,14 +187,21 @@ void RinexObs::getObservation(const string &filenameOut, const string &obsCode) 
         Rinex3ObsData data;
         RinexDatum datum;
 
-        cout << "Reading " << this->filename << endl;
+        cout << "Reading " << filename << endl;
+
+        Rinex3ObsHeader header;
+        Rinex3ObsStream obsFile;
+
+        obsFile.open(filename, ios::in);
+        obsFile.exceptions(ios::failbit);
+        obsFile >> header;
 
         Rinex3ObsStream rout(filenameOut, ios::out);
 
         while (obsFile >> data) {
             CivilTime civilTime(data.time);
 
-            RinexSatID satId(this->PRNCode, system);
+            RinexSatID satId(PRNCode, system);
             Rinex3ObsData::DataMap::iterator pointer = data.obs.find(satId);
 
             if (pointer == data.obs.end()) {
@@ -181,6 +216,7 @@ void RinexObs::getObservation(const string &filenameOut, const string &obsCode) 
 
         // Close out file
         rout.close();
+        obsFile.close();
     }
     catch(FFStreamError& error) {
         cout << error;

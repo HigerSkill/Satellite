@@ -12,16 +12,12 @@
  * Provides the ability to receive information stored for the specified (by PRN code) satellite.
  */
 class RinexObs {
-private:
-    void resetFile();
 
 public:
     char *filename;
     int PRNCode;
 
     gpstk::SatelliteSystem system;
-    gpstk::Rinex3ObsHeader header;
-    gpstk::Rinex3ObsStream obsFile;
 
     /**
      * Constructor create RinexParser object.
@@ -32,12 +28,6 @@ public:
     RinexObs(char* filename, int PRNCode, gpstk::SatelliteSystem system=gpstk::SatelliteSystem::GPS);
 
     RinexObs(const RinexObs& rinexObs);
-
-
-    /**
-     * Destructor RinexParser object.
-     */
-    ~RinexObs();
 
     /**
      * Check that `PRN` code exists for the observation code (L1, L2 and etc.)

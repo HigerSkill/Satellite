@@ -20,14 +20,27 @@ SP3::SP3(char *filename, int PRNCode, int interpolateOrder, gpstk::SatelliteSyst
     file >> header;
 }
 
+
+SP3::SP3(ConfigRun config) {
+    this->filename = config.sp3_file;
+    this->PRNCode = config.PRNCode;
+    this->interpolateOrder = config.interpolateOrder;
+    this->system = config.system;
+
+    file.open(this->filename, ios::in);
+    SP3Header header;
+    file >> this->header;
+}
+
 void SP3::getCoordinates(char *filenameOut) {
     SP3Stream rout(filenameOut, ios::out|ios::trunc);
 
     SP3Data data;
     SP3SatID satId(this->PRNCode, this->system);
 
-    file.clear();
-    file.seekg(0);
+    file.open(this->filename, ios::in);
+
+    SP3Header header;
     file >> header;
 
     while (file >> data) {
@@ -40,7 +53,7 @@ void SP3::getCoordinates(char *filenameOut) {
 
             int timestamp = int(civilTime.convertToCommonTime().getSecondOfDay());
 
-            rout << timestamp << "," << pos.X() << "," << pos.Y() << "," << pos.Z() << endl;
+            rout << timestamp << "," << data.x[0] << "," << data.x[1] << "," << data.x[2] << endl;
         }
     }
 }
@@ -51,8 +64,9 @@ std::map<int, std::vector<double>> SP3::getCoordinates() {
 
     map<int, vector<double>> coordinatesTime;
 
-    file.clear();
-    file.seekg(0);
+    file.open(this->filename, ios::in);
+
+    SP3Header header;
     file >> header;
 
     while (file >> data) {

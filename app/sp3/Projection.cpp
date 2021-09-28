@@ -3,6 +3,8 @@
 #include "../utils/Vectors.h"
 #include "../utils/Angles.h"
 
+#include <cmath>
+
 using namespace std;
 using namespace gpstk;
 
@@ -136,6 +138,16 @@ void Projection::getProjections(char *filenameOut, const vector<int> &times, con
         } catch(...) {
             continue;
         }
+
+        bool NA = false;
+        for (int i = 0; i < 3; ++i) {
+            if (isinf(position[i]) || isnan(position[i])) {
+                NA = true;
+                break;
+            }
+        }
+
+        if (NA) continue;
 
         Position satellite(position[0], position[1], position[2]);
 

@@ -30,6 +30,13 @@ public:
     */
     SP3(char *filename, int PRNCode, int interpolateOrder=10, gpstk::SatelliteSystem system=gpstk::SatelliteSystem::GPS);
 
+    /**
+    * Constructor create SP3 object.
+    *
+    * @param config ConfigRun with sp3 filename, PRN, interpolate order and satellite system.
+   */
+    SP3(ConfigRun config);
+
 /**
      * Parse SP3 file and write time and coordinates in files.
      * Get the three-vector for position | velocity (m | dm/s).
